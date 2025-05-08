@@ -10,13 +10,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.x'
 
+      - name: Check Cmake version
+        run: cmake --version
+
       - name: 
         run: |
-          cmake -S . -B ./build -DENABLE_EXECUTABLE=ON -DUSE_USE_VCPKG=ON -G "Visual Studio 17 2022" -A x64
+          cmake -S ../../ -B ./build -DENABLE_EXECUTABLE=ON -DUSE_USE_VCPKG=ON -G "Visual Studio 17 2022" -A x64
