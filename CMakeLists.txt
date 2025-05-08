@@ -42,7 +42,7 @@ else()
     message(STATUS "${VCPKG_REPO_URL} repository already exists at ${VCPKG_REPO_DIR}")
 endif()
 # run the python script to edit json file 
-if()
+# if()
 
 # List of options
 option(ENABLE_EXECUTABLE "General executable" ON)

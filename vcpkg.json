@@ -1,0 +1,10 @@
+{
+    "name": "OPENGL-TRY1", 
+    "version-string": "1.0.0",
+    "dependencies": [
+        {
+            "name": "glew",
+            "version>=": "2.2.0#3"
+        }
+    ]
+}
