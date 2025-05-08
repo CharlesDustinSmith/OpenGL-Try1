@@ -17,7 +17,7 @@ set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 #Setting Github variables for the project and VCPKG
 set(VCPKG_REPO_DIR "${CMAKE_SOURCE_DIR}/external/vcpkg")
-set(VCPKG_REPO_URL "git@github.com:microsoft/vcpkg.git")
+set(VCPKG_REPO_URL "https://github.com/microsoft/vcpkg.git")
 set(VCPKG_BUILDSYSTEMS_CMAKE_FILE "${VCPKG_REPO_DIR}/scripts/buildsystems/vcpkg.cmake")
 set(VCPKG_EXE "VCPKG_REPO_DIR/vcpkg.exe")
 #Set variable name for Library and Executable 
