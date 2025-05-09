@@ -1,7 +1,17 @@
 import json
 import subprocess
+import os
 
-vcpkg_commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd='../external/vcpkg').decode('utf-8').strip()
+current_file_path = os.path.dirname(os.path.abspath(__file__))
+base_folder_path = os.path.dirname(current_file_path)
+vcpkg_folder_path = os.path.join(base_folder_path, 'external', 'vcpkg')
+
+print(f"The current path is : {current_file_path}")
+print(f"The Base folder path is : {base_folder_path}")
+print(f"The VCPKG folder path is : {vcpkg_folder_path}")
+
+vcpkg_commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=vcpkg_folder_path).decode('utf-8').strip()
+print(f"Vcpkg commit hash: {vcpkg_commit_hash}")
 
 with open('../vcpkg.json', 'r+') as file: 
     data = json.load(file)

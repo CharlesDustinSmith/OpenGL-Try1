@@ -17,12 +17,15 @@ set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 #Setting Github variables for the project and VCPKG
 set(VCPKG_REPO_DIR "${CMAKE_SOURCE_DIR}/external/vcpkg")
-set(VCPKG_REPO_URL "https://github.com/microsoft/vcpkg.git")
-set(VCPKG_BUILDSYSTEMS_CMAKE_FILE "${VCPKG_REPO_DIR}/scripts/buildsystems/vcpkg.cmake")
-set(VCPKG_EXE "VCPKG_REPO_DIR/vcpkg.exe")
+set(VCPKG_REPO_URL "https://github.com/microsoft/vcpkg.git" CACHE STRING "")
+set(VCPKG_BUILDSYSTEMS_CMAKE_FILE "${VCPKG_REPO_DIR}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+set(VCPKG_EXE "${VCPKG_REPO_DIR}/vcpkg.exe")
 #Set variable name for Library and Executable 
 set(LIB_NAME Library)
 set(EXE_NAME GraphicsProjectTest)
+#Variable for the tools 
+set(TOOL_BASE_ADDR "${CMAKE_SOURCE_DIR}/tools")
+set(VCPKG_COMMIT_TOOL "${CMAKE_SOURCE_DIR}/tools/vcpkg-commit-getter.py" CACHE STRING "")
 #finding the Python3 interpreter
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
@@ -41,8 +44,6 @@ if(NOT EXISTS "${VCPKG_REPO_DIR}/.git")
 else()
     message(STATUS "${VCPKG_REPO_URL} repository already exists at ${VCPKG_REPO_DIR}")
 endif()
-# run the python script to edit json file 
-# if()
 
 # List of options
 option(ENABLE_EXECUTABLE "General executable" ON)
@@ -61,21 +62,48 @@ if(USE_VCPKG)
                 OUTPUT_VARIABLE BOOTSTRAP_OUT    
                 ERROR_VARIABLE BOOTSTRAP_ERR
             )
+            if(NOT BOOTSTRAP_RESULT EQUAL 0)
+                message(FATAL_ERROR "Failed to bootstrap vcpkg: ${BOOTSTRAP_ERR}\n")
+            else()
+                message(STATUS "vcpkg bootstrapped successfully: ${BOOTSTRAP_OUT}\nBootstrap result: ${BOOTSTRAP_RESULT}")
+            endif()
+            # Set CMake toolchain file to vcpkg
+            set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/external/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+            
             message(STATUS "Adding vcpkg to PATH")
             set(ENV{PATH} "$ENV{PATH};${VCPKG_REPO_DIR}")
             message(STATUS "New PATH: $ENV{PATH}")
             # Storing the vcpkg git commit hash in a variable
+            message(STATUS "Getting VCPKG commit hash using python script found at: ${VCPKG_COMMIT_TOOL}")
             execute_process(
-                COMMAND git rev-parse HEAD
-                WORKING_DIRECTORY ${VCPKG_REPO_DIR}
-                OUTPUT_VARIABLE VCPKG_COMMIT_HASH
-                ERROR_VARIABLE GIT_ERROR
+                COMMAND ${Python3_EXECUTABLE} "${VCPKG_COMMIT_TOOL}"
+                WORKING_DIRECTORY ${TOOL_BASE_ADDR}
+                RESULT_VARIABLE VCPKG_TOOL_RESULT
+                OUTPUT_VARIABLE VCPKG_TOOL_OUTPUT
+                ERROR_VARIABLE VCPKG_TOOL_ERROR
             )
-            if(NOT BOOTSTRAP_RESULT EQUAL 0)
-                message(FATAL_ERROR "Failed to bootstrap vcpkg: ${BOOTSTRAP_ERR}")
+            if(NOT VCPKG_TOOL_RESULT EQUAL 0)
+                message(FATAL_ERROR "Failed to run VCPKG tool script: ${VCPKG_COMMIT_TOOL}\nError: ${VCPKG_TOOL_ERROR}")
+            else()
+                message(STATUS "Tool executed at: ${VCPKG_COMMIT_TOOL}")
             endif()
         else()
             message(STATUS "vckpg found at ${VCPKG_EXE}")
+        endif()
+        # include the vcpkg buildsystem
+        message(STATUS "Including vcpkg buildsystem")
+        include(${VCPKG_BUILDSYSTEMS_CMAKE_FILE})
+        # Run the install from the vcpkg json
+        execute_process(
+            COMMAND cmd /c "${VCPKG_EXE} integrate install"
+            RESULT_VARIABLE VCPKG_RESULT
+            OUTPUT_VARIABLE VCPKG_OUTPUT
+            ERROR_VARIABLE VCPKG_ERROR
+        )
+        if(NOT VCPKG_RESULT EQUAL 0)
+            message(FATAL_ERROR "Failed to run vcpkg install: ${VCPKG_ERROR}")
+        else()
+            message(STATUS "vcpkg install result: ${VCPKG_OUTPUT}")
         endif()
     endif()
 endif()

@@ -1,10 +1,11 @@
 {
-    "name": "OPENGL-TRY1", 
+    "name": "opengl-try1",
     "version-string": "1.0.0",
     "dependencies": [
         {
             "name": "glew",
             "version>=": "2.2.0#3"
         }
-    ]
+    ],
+    "builtin-baseline": "b8970ecfc803f93e1b95d81ada1de7ea3a51fc8b"
 }
