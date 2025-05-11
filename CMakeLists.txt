@@ -1,35 +1,35 @@
-#The minimum required CMake version
+# The minimum required CMake version
 cmake_minimum_required(VERSION 3.25)
-#Defining the name of the project, the version, and language permitted.
+# Defining the name of the project, the version, and language permitted.
 project(
     GraphicProjectTutorial
     VERSION 1.0.0
     LANGUAGES C CXX
 )
-#Setting the C and C++ standard.
+# Setting the C and C++ standard.
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
-#The CMAKE_C_STANDARD and CMAKE_CXX_STANDARD variables are used to specify the C and C++ standards to be used for the project. The CMAKE_C_STANDARD variable is set to 11, which corresponds to the C11 standard, while the CMAKE_CXX_STANDARD variable is set to 20, which corresponds to the C++20 standard.
+# The CMAKE_C_STANDARD and CMAKE_CXX_STANDARD variables are used to specify the C and C++ standards to be used for the project. The CMAKE_C_STANDARD variable is set to 11, which corresponds to the C11 standard, while the CMAKE_CXX_STANDARD variable is set to 20, which corresponds to the C++20 standard.
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#The CMAKE_C_EXTENSIONS and CMAKE_C_EXTENSIONS variables controls whether compiler-specific extensions are enabled using a particular C/C++ standards.
+# The CMAKE_C_EXTENSIONS and CMAKE_C_EXTENSIONS variables controls whether compiler-specific extensions are enabled using a particular C/C++ standards.
 set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-#Setting Github variables for the project and VCPKG
+# Setting Github variables for the project and VCPKG
 set(VCPKG_REPO_DIR "${CMAKE_SOURCE_DIR}/external/vcpkg")
 set(VCPKG_REPO_URL "https://github.com/microsoft/vcpkg.git" CACHE STRING "")
 set(VCPKG_BUILDSYSTEMS_CMAKE_FILE "${VCPKG_REPO_DIR}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 set(VCPKG_EXE "${VCPKG_REPO_DIR}/vcpkg.exe")
-#Set variable name for Library and Executable 
+# Set variable name for Library and Executable 
 set(LIB_NAME Library)
 set(EXE_NAME GraphicsProjectTest)
-#Variable for the tools 
+# Variable for the tools 
 set(TOOL_BASE_ADDR "${CMAKE_SOURCE_DIR}/tools")
 set(VCPKG_COMMIT_TOOL "${CMAKE_SOURCE_DIR}/tools/vcpkg-commit-getter.py" CACHE STRING "")
-#finding the Python3 interpreter
+# Finding the Python3 interpreter
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
-#Checking if the vcpkg repository already exists
+# Checking if the vcpkg repository already exists
 if(NOT EXISTS "${VCPKG_REPO_DIR}/.git")
     message(STATUS "Cloning ${VCPKG_REPO_URL} into ${VCPKG_REPO_DIR}")
     execute_process(
@@ -67,9 +67,7 @@ if(USE_VCPKG)
             else()
                 message(STATUS "vcpkg bootstrapped successfully: ${BOOTSTRAP_OUT}\nBootstrap result: ${BOOTSTRAP_RESULT}")
             endif()
-            # Set CMake toolchain file to vcpkg
-            set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/external/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-            
+            # Set the vcpkg executable path
             message(STATUS "Adding vcpkg to PATH")
             set(ENV{PATH} "$ENV{PATH};${VCPKG_REPO_DIR}")
             message(STATUS "New PATH: $ENV{PATH}")
@@ -90,7 +88,7 @@ if(USE_VCPKG)
         else()
             message(STATUS "vckpg found at ${VCPKG_EXE}")
         endif()
-        # include the vcpkg buildsystem
+        # Include the vcpkg buildsystem
         message(STATUS "Including vcpkg buildsystem")
         include(${VCPKG_BUILDSYSTEMS_CMAKE_FILE})
         # Run the install from the vcpkg json
@@ -107,3 +105,5 @@ if(USE_VCPKG)
         endif()
     endif()
 endif()
+# Adding the scr directory to the project
+add_subdirectory(src)

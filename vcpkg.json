@@ -5,7 +5,17 @@
         {
             "name": "glew",
             "version>=": "2.2.0#3"
+        },
+        {
+            "name": "glfw3",
+            "version>=": "3.3.8#2"
         }
     ],
-    "builtin-baseline": "b8970ecfc803f93e1b95d81ada1de7ea3a51fc8b"
+    "overrides": [
+        {
+            "name": "glew",
+            "version": "2.2.0#3"
+        }
+    ],
+    "builtin-baseline": "3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c"
 }
