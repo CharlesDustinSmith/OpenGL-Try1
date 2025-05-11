@@ -3,12 +3,36 @@
     "version-string": "1.0.0",
     "dependencies": [
         {
+            "name": "egl-registry",
+            "version>=": "2024-01-25#0"
+        },
+        {
+            "name": "opengl-registry",
+            "version>=": "2024-02-10#1"
+        },
+        {
+            "name": "opengl",
+            "version>=": "2022-12-04#3"
+        },
+        {
+            "name": "freeglut",
+            "version>=": "3.6.0#1"
+        },
+        {
             "name": "glew",
             "version>=": "2.2.0#3"
         },
         {
             "name": "glfw3",
             "version>=": "3.3.8#2"
+        },
+        {
+            "name": "gflags",
+            "version>=": "2.2.2#9"
+        },
+        {
+            "name": "glog",
+            "version>=": "0.7.1"
         }
     ],
     "overrides": [
@@ -17,5 +41,5 @@
             "version": "2.2.0#3"
         }
     ],
-    "builtin-baseline": "3e5b8de5f6ebe844bee9d9eba0aed35c652e3c9c"
+    "builtin-baseline": "ca846b21276c9a3171074ac8d2b4f6516894a7d0"
 }
